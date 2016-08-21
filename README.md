@@ -53,9 +53,9 @@ If you don't have an .ics file and your image looks weird, try this:
 
 ```python
 im = ljpeg.read('path_to/some_file.ljpeg')
-im.reshape((im.shape[1], im.shape[0]))  # swaps width and height
+im = im.reshape((im.shape[1], im.shape[0]))  # swaps width and height
 
-# im.T <-- this won't work
+# im = im.T <-- this won't work
 ```
 
 <!-- Links -->
