@@ -58,6 +58,10 @@ im = im.reshape((im.shape[1], im.shape[0]))  # swaps width and height
 # im = im.T <-- this won't work
 ```
 
+## License
+
+MIT
+
 <!-- Links -->
 [@aaalgo/ljpeg]: https://github.com/aaalgo/ljpeg
 [DDSM]: http://marathon.csee.usf.edu/Mammography/Database.html
