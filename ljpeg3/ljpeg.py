@@ -9,13 +9,13 @@ def ics_file_name(path):
     dir_name = os.path.dirname(path)
     ics_files = glob(dir_name + '/*.ics')
     if len(ics_files) == 0:
-        print('Found no corresponding ics file')
+        print('found no corresponding ics file')
         return None
     elif len(ics_files) == 1:
-        print('Found ics file')
+        print('found ics file')
         return ics_files[0]
     else:
-        print('Found multiple ics files! Using first one.')
+        print('found multiple ics files! Using first one.')
         return ics_files[0]
 
 
@@ -39,7 +39,9 @@ def read_ics(ics_file, ljpeg_file):
 
 def read(ljpeg_path):
     # Check for the compiled ljpeg binary
-    BIN = os.path.join(os.path.dirname(__file__), "jpegdir", "jpeg")
+    pkg_dir = os.path.dirname(__file__)
+    pkg_root, _ = os.path.split(pkg_dir)
+    BIN = os.path.join(pkg_root, "jpegdir", "jpeg")
     if not os.path.exists(BIN):
         raise FileNotFoundError('jpeg is not built yet; use \'cd jpegdir; make\' first')
 
@@ -48,7 +50,7 @@ def read(ljpeg_path):
     l = subprocess.check_output(cmd, shell=True)
 
     # Fetch some information from the beginning of the output
-    pattern = re.compile('\sC:(\d+)\s+N:(\S+)\s+W:(\d+)\s+H:(\d+)\s')
+    pattern = re.compile(b'\sC:(\d+)\s+N:(\S+)\s+W:(\d+)\s+H:(\d+)\s')
     m = re.search(pattern, l)
     ljpeg_out = {'c': int(m.group(1)),  # aaalgo: I suppose this is # channels (https://github.com/aaalgo/ljpeg)
                  'f': m.group(2),  # This seems to be the output file
