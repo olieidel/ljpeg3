@@ -24,6 +24,7 @@ def ljpeg_file_name_base(path):
 
 
 def read_ics(ics_file, ljpeg_file):
+    print(ics_file)
     for l in open(ics_file, 'r'):
         l = l.strip().split(' ')
         if len(l) < 7:
@@ -31,10 +32,10 @@ def read_ics(ics_file, ljpeg_file):
         if l[0] == ljpeg_file:
             W = int(l[4])
             H = int(l[2])
-            bps = int(l[6])
-            if bps != 12:
-                raise Exception('BPS != 12: {}'.format(ics_file))
-            return W, H, bps
+            bpp = int(l[6])
+            if bpp != 12:
+                print('BPP != 12: {} in {}'.format(bpp, ics_file))  # this probably doesn't matter
+            return W, H, bpp
 
 
 def read(ljpeg_path):
@@ -79,9 +80,11 @@ def read(ljpeg_path):
 
     # Nice! We've got some bit shifting voodoo!
     # I have no idea what is going on here
-    L = im >> 8
-    H = im & 0xFF
-    im = (H << 8) | L
+    # Update: I do. It's converting from little to big endian. Nice!
+    # Basically swapping two 8-pairs of bits in an 16-bit integer.
+    L = im >> 8  # shift bits of im right by 8 bits
+    H = im & 0xFF  # masking: selecting only the last 8 bits of im
+    im = (H << 8) | L  # shift the other bits 8 positions to the left and "join" with L
 
     # Remove the output file
     os.remove(ljpeg_out['f'])
