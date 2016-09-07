@@ -62,16 +62,22 @@ def read(ljpeg_path):
         raise Exception('C != 1, could there be more than 1 channel in the image?')
 
     # Set width and height
-    w = ljpeg_out['w']
-    h = ljpeg_out['w']
+    cmd_w = ljpeg_out['w']
+    cmd_h = ljpeg_out['h']
+
+    w = cmd_w
+    h = cmd_w
 
     # Search for ics file and load data from it. Prefer data from this file if available
     ics_file = ics_file_name(ljpeg_path)
     if ics_file:
         ics_w, ics_h, ics_bps = read_ics(ics_file, ljpeg_file_name_base(ljpeg_path))
-        if ics_w != ljpeg_out['w'] or ics_h != ljpeg_out['h']:
-            # Overwrite width and height
-            print('ics file has conflicting width / height information')
+
+        if (ics_w * ics_h) != (cmd_w * cmd_h):
+            # shape is not identical, prefer subprocess output
+            pass
+        else:
+            # prefer width and height from ics if given
             w = ics_w
             h = ics_h
 
